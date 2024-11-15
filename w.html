@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+        header {
+            background-color: #3e8e41;
+            color: white;
+            padding: 10px 0;
+        }
+        header nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .weather-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: left;
+            width: 300px;
+            margin-top: 20px;
+            visibility: hidden; /* Initially hide the weather container */
+        }
+        .weather-field {
+            margin: 10px 0;
+        }
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+        }
+        footer {
+            background-color: #3e8e41;
+            color: white;
+            padding: 10px 0;
+            margin-top: 20px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            text-align: center;
+        }
+        .city-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            background-color: #3e8e41;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #2e6b33;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="https://app.leadteh.ru/w/czYAX" target="_blank">Contact</a></li>
+            </ul>
+        </nav>
+        <h1>Weather Information</h1>
+    </header>
+
+    <!-- City Input Section -->
+    <div>
+        <input type="text" class="city-input" id="city" placeholder="Enter city name">
+        <button class="submit-btn" onclick="getWeather()">Get Weather</button>
+    </div>
+
+    <!-- Weather Information Section -->
+    <div class="weather-container" id="weather-container">
+        <div class="weather-field">City: <span class="city-name">N/A</span></div>
+        <div class="weather-field">Coords: <span class="coords">N/A</span></div>
+        <div class="weather-field">Weather: <span class="weather-main">N/A</span> - <span class="weather-description">N/A</span></div>
+        <img class="weather-icon" src="" alt="Weather Icon">
+        <div class="weather-field">Temperature: <span class="temp">N/A</span> °C</div>
+        <div class="weather-field">Pressure: <span class="pressure">N/A</span> hPa</div>
+        <div class="weather-field">Humidity: <span class="humidity">N/A</span>%</div>
+        <div class="weather-field">Temp Min: <span class="temp-min">N/A</span> °C</div>
+        <div class="weather-field">Temp Max: <span class="temp-max">N/A</span> °C</div>
+        <div class="weather-field">Wind Speed: <span class="wind-speed">N/A</span> m/s</div>
+        <div class="weather-field">Wind Direction: <span class="wind-deg">N/A</span>°</div>
+        <div class="weather-field">Cloudiness: <span class="clouds">N/A</span>%</div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 WeatherApp | All Rights Reserved</p>
+        <p> Contact: +8 (777) 777-77-77 ext. 347 | Address: Astana, Kerey-Zhanibek Khandary street, 4/1</p>
+    </footer>
+
+    <!-- JavaScript to Fetch Weather Data -->
+    <script>
+        function getWeather() {
+            // Get the city name from the input
+            const city = document.getElementById("city").value;
+
+            // Check if city name is entered
+            if (city === "") {
+                alert("Please enter a city name!");
+                return;
+            }
+
+            // Fetch weather data from OpenWeather API
+            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=70e1ed322b02acbc57d443dd91065f3e`)
+                .then(function (resp) {
+                    return resp.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+
+                    // Check if the city was found
+                    if (data.cod === "404") {
+                        alert("City not found. Please check the name and try again.");
+                        return;
+                    }
+
+                    // Город и координаты
+                    document.querySelector('.city-name').textContent = data.name;
+                    document.querySelector('.coords').textContent = `Lat: ${data.coord.lat}, Lon: ${data.coord.lon}`;
+
+                    // Погода
+                    document.querySelector('.weather-main').textContent = data.weather[0].main;
+                    document.querySelector('.weather-description').textContent = data.weather[0].description;
+                    document.querySelector('.weather-icon').src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+
+                    // Температура
+                    document.querySelector('.temp').textContent = (data.main.temp - 273.15).toFixed(2);
+                    document.querySelector('.temp-min').textContent = (data.main.temp_min - 273.15).toFixed(2);
+                    document.querySelector('.temp-max').textContent = (data.main.temp_max - 273.15).toFixed(2);
+
+                    // Давление и влажность
+                    document.querySelector('.pressure').textContent = data.main.pressure;
+                    document.querySelector('.humidity').textContent = data.main.humidity;
+
+                    // Ветер
+                    document.querySelector('.wind-speed').textContent = data.wind.speed;
+                    document.querySelector('.wind-deg').textContent = data.wind.deg;
+
+                    // Облачность
+                    document.querySelector('.clouds').textContent = data.clouds.all;
+
+                    // Show weather info
+                    document.getElementById("weather-container").style.visibility = "visible";
+                })
+                .catch(function (error) {
+                    console.log("Ошибка:", error);
+                    alert("Failed to fetch weather data. Please try again later.");
+                });
+        }
+    </script>
+</body>
+</html>

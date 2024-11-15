@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Western Kazakhstan Regions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+        header {
+            background-color: #3e8e41;
+            color: white;
+            padding: 10px 0;
+        }
+        header nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .region-select-container {
+            margin-top: 20px;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        footer {
+            background-color: #3e8e41;
+            color: white;
+            padding: 10px 0;
+            margin-top: 20px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="https://app.leadteh.ru/w/czYAX" target="_blank">Contact</a></li>
+            </ul>
+        </nav>
+        <h1>Western Kazakhstan Regions</h1>
+    </header>
+
+    <!-- Region Select Section -->
+    <div class="region-select-container">
+        <h2>Select a Region</h2>
+        <select id="region-select">
+            <option value="">Select a region</option>
+            <option value="Uralsk">Uralsk (Oral)</option>
+            <option value="Aksai">Aksai</option>
+            <option value="Chingirlau">Chingirlau</option>
+            <option value="Krasnogorsk">Krasnogorsk</option>
+            <option value="Zelenovsk">Zelenovsk</option>
+            <option value="Baiterek">Baiterek</option>
+            <!-- Add more regions if needed -->
+        </select>
+        <button onclick="goToRegionDetails()">View Region Details</button>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Western Kazakhstan | All Rights Reserved</p>
+    </footer>
+
+    <!-- JavaScript to Handle Region Selection -->
+    <script>
+        function goToRegionDetails() {
+            const region = document.getElementById("region-select").value;
+            if (!region) {
+                alert("Please select a region.");
+                return;
+            }
+
+            // Handle redirect based on the selected region
+            switch (region) {
+                case "Uralsk":
+                    window.location.href = "mereke.html";  // Redirect to Uralsk page
+                    break;
+                case "Aksai":
+                    window.location.href = "aksai.html";  // Redirect to Aksai page
+                    break;
+                case "Chingirlau":
+                    window.location.href = "chingirlau.html";  // Redirect to Chingirlau page
+                    break;
+                case "Krasnogorsk":
+                    window.location.href = "krasnogorsk.html";  // Redirect to Krasnogorsk page
+                    break;
+                case "Zelenovsk":
+                    window.location.href = "zelenovsk.html";  // Redirect to Zelenovsk page
+                    break;
+                case "Baiterek":
+                    window.location.href = "baiterek.html";  // Redirect to Baiterek page
+                    break;
+                default:
+                    alert("Invalid region selected.");
+                    break;
+            }
+        }
+    </script>
+
+</body>
+</html>

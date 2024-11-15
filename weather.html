@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Western Kazakhstan Regions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+        header {
+            background-color: #3e8e41;
+            color: white;
+            padding: 10px 0;
+        }
+        header nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .region-select-container {
+            margin-top: 20px;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .region-info-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: none;
+        }
+        footer {
+            background-color: #3e8e41;
+            color: white;
+            padding: 10px 0;
+            margin-top: 20px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="w.html">Weather by Search</a></li>
+            </ul>
+        </nav>
+        <h1>Western Kazakhstan Regions</h1>
+    </header>
+
+    <!-- Region Select Section -->
+    <div class="region-select-container">
+        <h2>Select a Region</h2>
+        <select id="region-select">
+            <option value="">Select a region</option>
+            <option value="Uralsk">Uralsk (Oral)</option>
+            <option value="Aksai">Aksai</option>
+            <option value="Chingirlau">Chingirlau</option>
+            <option value="Krasnogorsk">Krasnogorsk</option>
+            <option value="Zelenovsk">Zelenovsk</option>
+            <option value="Baiterek">Baiterek</option>
+            <!-- Add more regions if needed -->
+        </select>
+        <button onclick="getRegionInfo()">Get Region Info</button>
+    </div>
+
+    <!-- Region Info Section -->
+    <div class="region-info-container" id="region-info-container">
+        <h3>Region: <span id="region-name">N/A</span></h3>
+        <p id="region-description">Description: N/A</p>
+        <h4>Weather in the selected region:</h4>
+        <div id="region-weather">
+            <p>Weather info will be displayed here.</p>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Western Kazakhstan | All Rights Reserved</p>
+    </footer>
+
+    <!-- JavaScript to Fetch Region Info -->
+    <script>
+        const regionData = {
+            "Uralsk": {
+                description: "Uralsk (also called Oral) is the administrative center of the West Kazakhstan region, located along the Ural River.",
+                weatherUrl: "http://api.openweathermap.org/data/2.5/weather?q=Uralsk&appid=70e1ed322b02acbc57d443dd91065f3e"
+            },
+            "Aksai": {
+                description: "Aksai is a town in West Kazakhstan, known for its agriculture and proximity to major transportation routes.",
+                weatherUrl: "http://api.openweathermap.org/data/2.5/weather?q=Aksai&appid=70e1ed322b02acbc57d443dd91065f3e"
+            },
+            "Chingirlau": {
+                description: "Chingirlau is a district located near the Ural River, known for its picturesque landscapes and natural beauty.",
+                weatherUrl: "http://api.openweathermap.org/data/2.5/weather?q=Chingirlau&appid=70e1ed322b02acbc57d443dd91065f3e"
+            },
+            "Krasnogorsk": {
+                description: "Krasnogorsk is known for its beautiful green landscapes and vibrant local culture.",
+                weatherUrl: "http://api.openweathermap.org/data/2.5/weather?q=Krasnogorsk&appid=70e1ed322b02acbc57d443dd91065f3e"
+            },
+            "Zelenovsk": {
+                description: "Zelenovsk is a small town with rich agricultural activities located in the West Kazakhstan region.",
+                weatherUrl: "http://api.openweathermap.org/data/2.5/weather?q=Zelenovsk&appid=70e1ed322b02acbc57d443dd91065f3e"
+            },
+            "Baiterek": {
+                description: "Baiterek is a district well-known for its strong agricultural output and proximity to the city of Uralsk.",
+                weatherUrl: "http://api.openweathermap.org/data/2.5/weather?q=Baiterek&appid=70e1ed322b02acbc57d443dd91065f3e"
+            }
+        };
+
+        function getRegionInfo() {
+            const region = document.getElementById("region-select").value;
+
+            if (!region) {
+                alert("Please select a region.");
+                return;
+            }
+
+            // Update region info section
+            document.getElementById("region-name").textContent = region;
+            document.getElementById("region-description").textContent = `Description: ${regionData[region].description}`;
+
+            // Fetch weather info for the selected region
+            fetch(regionData[region].weatherUrl)
+                .then(function (resp) {
+                    return resp.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                    if (data.cod === "404") {
+                        document.getElementById("region-weather").innerHTML = "<p>Weather data not available for this region.</p>";
+                        return;
+                    }
+                    
+                    // Show weather data
+                    document.getElementById("region-weather").innerHTML = `
+                        <p>Weather: ${data.weather[0].main} - ${data.weather[0].description}</p>
+                        <img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather Icon">
+                        <p>Temperature: ${(data.main.temp - 273.15).toFixed(2)} °C</p>
+                        <p>Pressure: ${data.main.pressure} hPa</p>
+                        <p>Humidity: ${data.main.humidity}%</p>
+                    `;
+
+                    // Show the region info container
+                    document.getElementById("region-info-container").style.display = "block";
+                })
+                .catch(function (error) {
+                    console.log("Ошибка:", error);
+                    alert("Failed to fetch region data. Please try again later.");
+                });
+        }
+    </script>
+</body>
+</html>
